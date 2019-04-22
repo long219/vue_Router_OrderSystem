@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script src="adminMenu.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="adM">
+			<div class="form-group" style="width: 222px;">
+				<!-- 输入框 -->
+				<input type="text" class="form-control" id="name" placeholder="请输入菜名" @keyup="getMenuNameQuery" v-model="menuName" autocomplete="off">
+				
+				<!-- 下拉框 -->
+				<label for="stateName" style="position: absolute;top: 8px;right: 657px;">状态:</label>
+				<select class="form-control"  v-model="sta" style="width:81px;position: absolute;top: 0px;right: 572px;">
+				  <option value="" ></option>
+				  <option value="1" >上架</option>
+				  <option value="2" >下架</option>
+				  <option value="0" >删除</option>
+				</select>
+				
+				<!-- 下拉框 -->
+				<label for="stateName" style="position: absolute;top: 8px;right: 496px;">是否置顶:</label>
+				<select class="form-control"  v-model="istop" style="width: 66px;position: absolute;top: 0px;right: 420px;">
+				  <option value="" ></option>
+				  <option value="Y" >是</option>
+				  <option value="N" >否</option>
+				</select>
+				
+				<!-- 提交按钮 -->
+				<button type="button" class="btn btn-info"  @click="getMenuNameQuery" style="position: absolute;top: 0px;right: 326px;width: 84px;">搜索</button>
+			</div>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>菜名</th>
+						<th>价格</th>
+						<th>优惠</th>
+						<th>是否置顶</th>
+						<th>状态</th>
+						<th>上架时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(v,index) in menuList">
+						<td>{{index+1}}</td>
+						<td>{{v.name}}</td>
+						<td>{{v.price}}</td>
+						<td>{{v.discount_price}}</td>
+						<td>{{v.isTop}}</td>
+						<td>{{v.stateName}}</td>
+						<td>{{v.createTime}}</td>
+						<td>
+							<button class="btn btn-danger btn btn-primary " data-target="#myModal" data-toggle="modal" @click="indexUser=index">删除</button>
+							<button class="btn btn-primary   btn btn-primary" data-target="#myModalUpdata" data-toggle="modal" @click="updataInfo(index)">修改</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<!-- 分页栏 -->
+			<ul class="pagination">
+				<li><a href="javascript:void(0)" class="{ setButtonClass(0) }" @click="prvePage(page)">上一页</a></li>
+				<li v-for="itme in total" :class="{active:itme==page}"><a href="javascript:void(0)" @click="queryMenuAll(itme)">{{itme}}</a></li>
+				<li><a href="javascript:void(0)" class="{setButtonClass(1)}" @click="nextPage(page)">下一页</a></li>
+			</ul>
+			<!-- /分页栏 -->
+			
+			<!-- 删除模态框 -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">提示 !</h4>
+						</div>
+						<div class="modal-body" v-if="indexUser !==-1">你确定要删除该菜品: {{ menuList[indexUser] ? menuList[indexUser].name : " "}}吗？</div>
+						<div class="modal-body" v-else>你确定要删除所有用户吗？</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" @click="deleteMenu" data-dismiss="modal">确认</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /删除模态框 -->
+			
+			<!-- 修改个模态框 -->
+			<div class="modal fade" id="myModalUpdata" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdate"
+			 aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabelUpdate">提示</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="name">菜名</label>
+								<input type="text" class="form-control" id="names" v-model="menuArray.name" placeholder="请输入菜名">
+							</div>
+							<div class="form-group">
+								<label for="price">价格</label>
+								<input type="text" class="form-control" id="price" v-model="menuArray.price" placeholder="请输入价格">
+							</div>
+							<div class="form-group">
+								<label for="discount_price">优惠</label>
+								<input type="text" class="form-control" id="discount_price" v-model="menuArray.discount_price" placeholder="请输入折扣">
+							</div>
+							<div class="form-group">
+								<label class="radio-inline">
+									<input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="N" :checked="menuArray.isTop=='N'" v-model="menuArray.isTop"> 否
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="optionsRadiosinline" id="optionsRadios4" value="Y" :checked="menuArray.isTop=='Y'" v-model="menuArray.isTop"> 是
+								</label>
+							</div>
+							<div class="form-group">
+								<label for="stateName">状态</label>
+								<select class="form-control"  v-model="menuArray.state">
+								  <option value="1" :selected="menuArray.state=='1'">上架</option>
+								  <option value="2" :selected="menuArray.state=='2'">下架</option>
+								  <option value="0" :selected="menuArray.state=='0'">删除</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" @click="updata" data-dismiss="modal">确认修改</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal" @click="">关闭</button> <!-- cancel -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /修改个模态框 -->	
+		</div>
+	</body>
+</html>

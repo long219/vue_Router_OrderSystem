@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="addMenu.js" type="text/javascript" charset="utf-8"></script>
+<script src="bootbox/toastr.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="bootbox/toastr.css"/>
+</head>
+<body>
+	<div id="addM">
+		<h2 id="hMsg"></h2>
+		<div class="modal fade" id="myModalUAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdate" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabelUpdate">提示</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="name">菜名</label>
+							<input type="text" class="form-control" id="names" v-model="menuArr.name" placeholder="请输入菜名">
+						</div>
+						<div class="form-group">
+							<label for="price">价格</label>
+							<input type="text" class="form-control" id="price" v-model="menuArr.price" placeholder="请输入价格">
+						</div>
+						<div class="form-group">
+							<label for="discount_price">优惠</label>
+							<input type="text" class="form-control" id="discount_price" v-model="menuArr.discount_price" placeholder="请输入折扣">
+						</div>
+						<div class="form-group">
+							<label class="radio-inline">
+								<input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="N" :checked="menuArr.isTop=='N'" v-model="menuArr.isTop"> 否
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="optionsRadiosinline" id="optionsRadios4" value="Y" :checked="menuArr.isTop=='Y'" v-model="menuArr.isTop"> 是
+							</label>
+						</div>
+						<div class="form-group">
+							<label for="stateName">状态</label>
+							<select class="form-control"  v-model="menuArr.state">
+							  <option value="1" :selected="menuArr.state=='1'">上架</option>
+							  <option value="2" :selected="menuArr.state=='2'">下架</option>
+							  <option value="0" :selected="menuArr.state=='0'">删除</option>
+							</select>
+						</div>
+					</div>
+		
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" @click="add" data-dismiss="modal">确认修改</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="vue_Router_OrderSystem:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/vue_Router_OrderSystem_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="vue_Router_OrderSystem" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="lib" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="vue_Router_OrderSystem/web/Web" />
+    </root>
+  </artifact>
+</component>

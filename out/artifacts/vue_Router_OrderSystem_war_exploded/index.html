@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>登录中心</title>
+
+		<script src="static/nameSpace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script src="static/axios.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="static/bootstrap.css" />
+		
+		<!-- 消息提示框 -->
+		<script src="bootbox/toastr.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="bootbox/toastr.css"/>
+		<!-- /消息提示框 -->
+		
+		<!-- 路由插件 -->
+		<script src="static/vue-router.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+		
+		<style type="text/css">
+			.divSty{
+				width: 491px;
+				height: 245px;
+				margin: 0 auto;
+				margin-top: 200px;
+				border: 1px solid #ccc;
+				padding: 34px;
+			}
+			.div-register{
+				width: 491px;
+				height: 328px;
+				margin: 0 auto;
+				margin-top: 200px;
+				border: 1px solid #ccc;
+				padding: 34px;
+			}
+			.add-box{
+				    width: 335px;
+					margin: 0px auto;
+
+			}
+			ul {
+				list-style: none;
+			}
+			.panel-body ul>li {
+				margin-top: 5px;
+			}
+			.w-h{
+				width: 950px;			
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="bootbox/toastr.css"/>
+	</head>
+	<body>
+		<div  id="login-box">
+			<div >
+				<router-link to="/login"></router-link>
+				<router-link to="/register"></router-link>
+				<router-view></router-view>
+			</div>
+		</div>
+		<!-- 登录 -->
+		<template id="tpLogin">
+			<div class="divSty">
+				<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="firstname" class="col-sm-2 control-label">账号</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="firstname" placeholder="请输入账号/手机号" autocomplete="off" v-model="user.phone">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastname" class="col-sm-2 control-label">密码</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="lastname" placeholder="请输入姓"  autocomplete="off" v-model="user.password">
+							</div>
+						</div>
+				</form>
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default"  data-target="#myModald" data-toggle="modal" @click.prevent="login">登录</button>
+					<button type="submit" class="btn btn-default"  data-target="#myModald" data-toggle="modal" @click.prevent="register">注册</button>
+				</div>	
+			</div>
+		</template>
+		<!-- /end -->
+		
+		<!-- 注册 -->
+		<template id="tpRegister">
+			<div id="userregister" class="div-register">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="firstname" class="col-sm-2 control-label">名称:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="firstnameR" placeholder="请输入账号/手机号" autocomplete="off" v-model="user.username">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastname" class="col-sm-2 control-label">密码:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="lastnameR" placeholder="请输入密码" autocomplete="off" v-model="user.password">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="iphonname" class="col-sm-2 control-label">电话:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="iphonnameR" placeholder="请输入联系电话" autocomplete="off" v-model="user.phone">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="addressname" class="col-sm-2 control-label">地址</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="addressname" placeholder="请输入有效地址" autocomplete="off" v-model="user.address">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="moneyname" class="col-sm-2 control-label">金额</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="moneyname" placeholder="请输入你金额" autocomplete="off" v-model="user.money">
+							</div>
+						</div>
+					</form>
+					
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" data-target="#myModal" data-toggle="modal" @click.prevent="myRegister">注册</button>
+						<button type="submit" class="btn btn-default" data-target="#myModal" data-toggle="modal" @click.prevent="retureUpperstory">返回上一层</button>
+					</div>
+				
+			</div>
+		</template>
+		<!-- /end -->
+		
+		<!-- 管理员主页面 -->
+		<template id="adminS">
+			<div class="container" id="adminss">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<div class="page-header">
+						<h1>
+							管理员中心 <small style="position: relative;left: 621px;"> Welcome  尊敬的 {{userList.username}}</small>
+						</h1>
+					</div>
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="col-md-2 column">
+					<!-- 操作功能 -->
+					<div class="panel-group" id="panel-767184">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-767184" href="#panel-element-878295">操作功能</a>
+							</div>
+							<div id="panel-element-878295" class="panel-collapse collapse">
+								<div class="panel-body">
+									<ul>
+										<li><button type="button" class="btn btn-primary"  @click="queryMenu">菜单信息</button></li>
+										<li><button type="button" class="btn btn-success" @click="orderQuery">订单信息</button></li>
+										<li><button type="button" class="btn btn-info" @click="addMenu">增加菜品</button></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<a class="panel-title" data-toggle="collapse" data-parent="#panel-767184" href="#panel-element-21859">个人信息</a>
+							</div>
+							<div id="panel-element-21859" class="panel-collapse in">
+								<div class="panel-body">
+									正在维护中....
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 结束操作功能 -->
+				</div>
+				<div class="col-md-10 column">
+					<div id="menuQueryAll" >
+						<router-link to="/adminShow/home"></router-link>  	<!-- 首页 -->
+						<router-link to="/adminShow/adminMenu"></router-link> 	<!-- 所有菜品信息 -->
+						<router-link to="/adminShow/adminAdd"></router-link> 	<!-- 菜品增加 -->
+						<router-link to="/adminShow/adminUpate"></router-link>  <!-- 菜品修改 -->
+						<div >
+							<!-- 路由匹配到的 子组件 将渲染在这里 -->
+							<router-view></router-view>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</template>
+		<!-- /end -->
+		
+		<!-- 首页 -->
+		<template id="homed">
+			<div >
+				<h2>你来干什么 ， 东西又不买！</h2>
+			</div>
+		</template>
+		<!-- /end -->
+		
+		<!-- 管理员菜品 -->
+		<template id="adminM">
+			<div id="adM">
+				<div class="form-group" style="width: 222px;">
+					<!-- 输入框 -->
+					<input type="text" class="form-control" id="name" placeholder="请输入菜名" @keyup="getMenuNameQuery" v-model="menuName" autocomplete="off">
+					
+					<!-- 下拉框 -->
+					<label for="stateName" style="position: absolute;top: 8px;right: 657px;">状态:</label>
+					<select class="form-control"  v-model="sta" style="width:81px;position: absolute;top: 0px;right: 572px;">
+					  <option value="" ></option>
+					  <option value="1" >上架</option>
+					  <option value="2" >下架</option>
+					  <option value="0" >删除</option>
+					</select>
+					
+					<!-- 下拉框 -->
+					<label for="stateName" style="position: absolute;top: 8px;right: 496px;">是否置顶:</label>
+					<select class="form-control"  v-model="istop" style="width: 66px;position: absolute;top: 0px;right: 420px;">
+					  <option value="" ></option>
+					  <option value="Y" >是</option>
+					  <option value="N" >否</option>
+					</select>
+					
+					<!-- 提交按钮 -->
+					<button type="button" class="btn btn-info"  @click="getMenuNameQuery" style="position: absolute;top: 0px;right: 326px;width: 84px;">搜索</button>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>菜名</th>
+							<th>价格</th>
+							<th>优惠</th>
+							<th>是否置顶</th>
+							<th>状态</th>
+							<th>上架时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(v,index) in menuList">
+							<td>{{index+1}}</td>
+							<td>{{v.name}}</td>
+							<td>{{v.price}}</td>
+							<td>{{v.discount_price}}</td>
+							<td>{{v.isTop}}</td>
+							<td>{{v.stateName}}</td>
+							<td>{{v.createTime}}</td>
+							<td>
+								<button class="btn btn-danger btn btn-primary " data-target="#myModal" data-toggle="modal" @click="indexUser=index">删除</button>
+								<button class="btn btn-primary   btn btn-primary" data-target="#myModalUpdata" data-toggle="modal" @click="updataInfo(index)">修改</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<!-- 分页栏 -->
+				<ul class="pagination">
+					<li><a href="javascript:void(0)" class="{ setButtonClass(0) }" @click="prvePage(page)">上一页</a></li>
+					<li v-for="itme in total" :class="{active:itme==page}"><a href="javascript:void(0)" @click="queryMenuAll(itme)">{{itme}}</a></li>
+					<li><a href="javascript:void(0)" class="{setButtonClass(1)}" @click="nextPage(page)">下一页</a></li>
+				</ul>
+				<!-- /end -->
+				
+				<!-- 删除模态框 -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">提示 !</h4>
+							</div>
+							<div class="modal-body" v-if="indexUser !==-1">你确定要删除该菜品: {{ menuList[indexUser] ? menuList[indexUser].name : " "}}吗？</div>
+							<div class="modal-body" v-else>你确定要删除所有菜品吗？</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" @click="deleteMenu" data-dismiss="modal">确认</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							</div>
+						</div>
+					</div>
+				</div>	
+				<!-- /end -->
+			</div>
+		</template>
+		<!-- /end -->
+		
+		<!-- 菜品增加 -->
+		<template id="adminA">
+			<div id="addM" class="add-box">
+					<div class="form-group">
+						<label for="name">菜名</label>
+						<input type="text" class="form-control" id="namesA" v-model="menuArr.name" placeholder="请输入菜名">
+					</div>
+					<div class="form-group">
+						<label for="price">价格</label>
+						<input type="text" class="form-control" id="priceA" v-model="menuArr.price" placeholder="请输入价格">
+					</div>
+					<div class="form-group">
+						<label for="discount_price">优惠</label>
+						<input type="text" class="form-control" id="discount_priceA" v-model="menuArr.discount_price" placeholder="请输入折扣">
+					</div>
+					<div class="form-group">
+						<label class="radio-inline">
+							<input type="radio" name="optionsRadiosinline" id="optionsRadios3A" value="N" :checked="menuArr.isTop=='N'" v-model="menuArr.isTop"> 否
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="optionsRadiosinline" id="optionsRadios4A" value="Y" :checked="menuArr.isTop=='Y'" v-model="menuArr.isTop"> 是
+						</label>
+					</div>
+					<div class="form-group">
+						<label for="stateName">状态</label>
+						<select class="form-control"  v-model="menuArr.state">
+						  <option value="1" :selected="menuArr.state=='1'">上架</option>
+						  <option value="2" :selected="menuArr.state=='2'">下架</option>
+						  <option value="0" :selected="menuArr.state=='0'">删除</option>
+						</select>
+					</div>
+					<div >
+						<button type="button" class="btn btn-primary" @click="add" data-dismiss="modal">确认修改</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" @click="closed">关闭</button> 
+					</div>
+			</div>
+		</template>
+		<!-- /end -->
+		
+		<!-- /管理员修改菜品 -->
+		<template id="adminMenuUpated">
+			<!-- 菜品修改修改 -->
+			<div class="add-box"> 
+				<div >
+					<div class="form-group">
+						<label for="name">菜名</label>
+						<input type="text" class="form-control" id="namesUpate" v-model="menuArray.name" placeholder="请输入菜名">
+					</div>
+					<div class="form-group">
+						<label for="price">价格</label>
+						<input type="text" class="form-control" id="priceUpate" v-model="menuArray.price" placeholder="请输入价格">
+					</div>
+					<div class="form-group">
+						<label for="discount_price">优惠</label>
+						<input type="text" class="form-control" id="discount_priceUpate" v-model="menuArray.discount_price" placeholder="请输入折扣">
+					</div>
+					<div class="form-group">
+						<label class="radio-inline">
+							<input type="radio" name="optionsRadiosinline" id="optionsRadiosUpate" value="N" :checked="menuArray.isTop=='N'" v-model="menuArray.isTop"> 否
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="optionsRadiosinline" id="optionsRadios6Upate" value="Y" :checked="menuArray.isTop=='Y'" v-model="menuArray.isTop"> 是
+						</label>
+					</div>
+					<div class="form-group">
+						<label for="stateName">状态</label>
+						<select class="form-control"  v-model="menuArray.state">
+						  <option value="1" :selected="menuArray.state=='1'">上架</option>
+						  <option value="2" :selected="menuArray.state=='2'">下架</option>
+						  <option value="0" :selected="menuArray.state=='0'">删除</option>
+						</select>
+					</div>
+				</div>
+				<div >
+					<button type="button" class="btn btn-primary" @click="updata" data-dismiss="modal">确认修改</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" @click="cancel">关闭</button> <!-- cancel -->
+				</div>
+			</div>
+			<!-- end -->
+		</template>
+		<!-- /end -->
+	</body>
+</html>
